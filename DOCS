@@ -17,9 +17,12 @@ AI 这个我可能要查点资料，这个应该是最难做的了。
 
 函数
 
-void reverse(int src[8][8],dest[8][8],int x,int y,int thischess)
+void reverse(int src[8][8],int dest[8][8],int x,int y,int thischess)
 在x,y处下一子，src数组为下子前棋局,dest为翻转后棋局,
 thischess为所下棋子(1或-1)
+
+bool judgeload(int x,int y,Chess board[8][8],int thischess)
+判断能否在(x,y)下一子
 
 
 声明，全局变量(extern) *.h
