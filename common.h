@@ -7,6 +7,7 @@ typedef int Chess;
 #define NUL 0
 
 #define BSIZE 8
+bool judgeload(int x,int y,Chess board[][BSIZE],Chess thischess);//判断能否落子
 int reverse(Chess src[][BSIZE],Chess dest[][BSIZE],int x, int y,Chess thischess);
 void clrscr();
 #endif

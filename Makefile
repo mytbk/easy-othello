@@ -1,4 +1,4 @@
-CXX=clang++
+#CXX=clang++
 CXXFLAGS=-g -Wall
 OBJS=reverse.o main.o functions.o
 
@@ -12,6 +12,6 @@ prog : $(OBJS)
 #	$(CXX) -c $(CXXFLAGS) main.cpp -o main.o
 
 clean :
-	rm *.o
+	rm *.o prog
 
 .PHONY : clean
