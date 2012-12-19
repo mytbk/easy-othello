@@ -27,3 +27,8 @@ bool judgeload(int x,int y,Chess board[8][8],int thischess)
 
 声明，全局变量(extern) *.h
 定义 *.cpp
+
+#A bug found...
+设计
+	注意是黑棋先走
+

@@ -3,6 +3,7 @@
 
 using namespace std;
 
+Chess human=BLACK;
 Chess thischess=BLACK;
 Chess qipan[8][8]={};
 int nSteps=0; //记录步数
@@ -49,8 +50,9 @@ void shuruzuobiao()
 	while (1){
 		cout<<"请输入您需要落子的位置坐标：（例如 A 1），player"<<player[thischess+1]<<" ";
 		cin>>hang>>lie;
-		if(hang>='A'&&hang<='H'&&lie>='1'&&lie<='8')
+		if(((hang>='A'&&hang<='H')||(hang>='a'&&hang<='h'))&&lie>='1'&&lie<='8')
 		{
+			hang&=0xdf;
 			if (judgeload(hang-'A',lie-'1',qipan,thischess))
 				return;
 			else {
@@ -68,11 +70,13 @@ void choosecolour()
 	int colour;
 	cout<<"请输入您需要选择的棋子颜色：(黑 1 or 白 -1)";
 	cin>>colour;
-	if(colour==1) { thischess=BLACK;
+	human=colour;
+	thischess=BLACK; //注意是黑棋先下！！
+	if(colour==1) { 
 		entergame();
 	}
 	else if(colour==-1)
-	{thischess=WHITE;
+	{
 		entergame();
 	}
 	else {
@@ -100,7 +104,7 @@ void printmainmenu()
 {
 	cout<<"主菜单："<<endl;
 	cout<<"直接进入游戏：输入 E G"<<endl;
-	cout<<"选择先手后手：输入 C O"<<endl;
+	cout<<"继续游戏：输入 C O"<<endl;
 	cout<<"选择棋子颜色：输入 C C"<<endl;
 	cout<<"当前游戏存盘：输入 S C"<<endl;
 	cout<<"读取存盘游戏：输入 R C"<<endl;
@@ -110,9 +114,10 @@ void printmainmenu()
 void entergame()
 {
 	printqizi();
+	int moveflag=0; //记录不可移动的步数，2则游戏结束
 	while(1)
 	{
-		if (nSteps==60){
+		if (moveflag==2||nSteps==60){
 			cout << "游戏结束" << endl;
 			return;
 		}
@@ -126,16 +131,24 @@ void entergame()
 			}
 		}
 		if (canMove){
-			shuruzuobiao();
+			moveflag=0;
+			int nReversed;
+			if (thischess!=human){
+				Position pos=naive_ai(qipan,thischess);
+				nReversed = reverse(qipan,qipan,pos>>4,pos&0xf,thischess);
+			}else{
+				shuruzuobiao();
+				nReversed=reverse(qipan,qipan,hang-'A',lie-'1',thischess);
+			}
 			clrscr();
-			int nReversed=reverse(qipan,qipan,hang-'A',lie-'1',thischess);
 			nChesses[1+thischess]+=nReversed+1;
 			nChesses[1-thischess]-=nReversed;
 			++nSteps;
 		}
 		else{
+			++moveflag;
 			cout << "Player" << player[1+thischess] 
-				<< "has no valid moves." << endl;
+				<< " has no valid moves." << endl;
 		}
 		thischess=-thischess;
 		printqizi();
