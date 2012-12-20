@@ -30,5 +30,4 @@ bool judgeload(int x,int y,Chess board[8][8],int thischess)
 
 #A bug found...
 设计
-	注意是黑棋先走
-
+	新有戏时直接打开初始棋盘

@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <cstring>
+#include "common.h"
 
 void clrscr()
 {

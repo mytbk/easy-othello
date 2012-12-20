@@ -1,4 +1,4 @@
-#CXX=clang++
+CXX=clang++
 CXXFLAGS=-g -Wall
 OBJS=reverse.o main.o functions.o game_ai.o
 

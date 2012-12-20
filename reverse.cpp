@@ -1,6 +1,22 @@
 #include "common.h"
 
 int 
+get_move(Chess board[BSIZE][BSIZE],Position list[],int chess,int max)
+{
+	int nMoves=0;
+	for (int i=0;i<BSIZE;i++){
+		for (int j=0;j<BSIZE;j++){
+			if (judgeload(i,j,board,chess)){
+					list[nMoves++]=(i<<4)|j;
+					if (nMoves==max)
+						return nMoves;
+			}
+		}
+	}
+	return nMoves;
+}
+
+int 
 reverse(Chess src[][BSIZE],Chess dest[][BSIZE],int x, int y,Chess thischess)
 {
 	if (thischess==0)
