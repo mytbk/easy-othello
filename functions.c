@@ -1,8 +1,6 @@
 #include <stdlib.h>
-#include <cstring>
-#include "common.h"
 
-void clrscr()
+void clrscr() 
 {
 #ifdef linux
 	system ("clear");

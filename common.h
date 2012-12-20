@@ -22,6 +22,6 @@ int get_move(Chess[][BSIZE],Position*,Chess,int);
 bool judgeload(int,int,Chess[][BSIZE],Chess);//判断能否落子
 int reverse(Chess src[][BSIZE],Chess dest[][BSIZE],int x, int y,Chess thischess);
 Position game_ai(Chess board[8][8],Chess);
-void clrscr();
+extern "C" void clrscr();
 #endif
 

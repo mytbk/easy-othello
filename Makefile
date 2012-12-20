@@ -1,6 +1,9 @@
+CC=clang
 CXX=clang++
-CXXFLAGS=-g -Wall
-OBJS=reverse.o main.o functions.o game_ai.o
+CFLAGS=-g -Wall
+CXXFLAGS=${CFLAGS}
+
+OBJS=operations.o main.o functions.o game_ai.o
 
 prog : $(OBJS)
 	$(CXX) $(OBJS) -o prog
