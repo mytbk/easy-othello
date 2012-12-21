@@ -23,8 +23,14 @@ evaluate(Chess board[8][8])
 	for (int i=0;i<8;i++)
 		for (int j=0;j<8;j++)
 			nChesses[1+board[i][j]]++;
+	if (nChesses[0]==0) //no whites
+		return INF;
+	if (nChesses[2]==0) //no blacks
+		return -INF;
+	/*
 	if (nChesses[1]<5) //the remaining chesses are few
-		return nChesses[2]-nChesses[0];
+		return nChesses[2]-nChesses[0]; //remain fixed
+		*/
 
 	//calculate the corner value
 	int corner_value=SQUARE(nChesses[1]/5+1)+1;
@@ -101,6 +107,8 @@ search(Chess board[8][8], int thischess, int depth, int &x, int &y)
 		goto __start;
 	}else
 		moveflag=0;
+	if (nMoves<4)
+		depth++;
 #ifdef debug
 	cerr << thischess << '\t' << nMoves << " moves" << endl;
 #endif

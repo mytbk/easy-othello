@@ -24,10 +24,10 @@ char hang,lie;
 void game_init() //棋局初始化
 {
 	memset(qipan,0,sizeof(qipan));
-	qipan[3][3]=BLACK;
-	qipan[3][4]=WHITE;
-	qipan[4][3]=WHITE;
-	qipan[4][4]=BLACK;
+	qipan[3][3]=WHITE;
+	qipan[3][4]=BLACK;
+	qipan[4][3]=BLACK;
+	qipan[4][4]=WHITE;
 	nSteps=0;
 	nChesses[0]=nChesses[2]=2;
 	thischess=BLACK;
