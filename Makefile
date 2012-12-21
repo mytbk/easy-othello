@@ -3,7 +3,7 @@ CXX=clang++
 CFLAGS=-g -Wall
 CXXFLAGS=${CFLAGS}
 
-OBJS=operations.o main.o functions.o game_ai.o
+OBJS=operations.o main.o functions.o game_ai.o greedy_ai.o
 
 prog : $(OBJS)
 	$(CXX) $(OBJS) -o prog

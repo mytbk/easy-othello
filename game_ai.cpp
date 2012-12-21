@@ -1,5 +1,10 @@
 #include "common.h"
 
+/* list of AI */
+Position naive_ai(Chess[][8],Chess);
+int greedy_ai(Chess[][8],Chess);
+/* end of AI list */
+
 Position naive_ai(Chess board[8][8],Chess thischess)
 	//just for test
 {
@@ -11,12 +16,8 @@ Position naive_ai(Chess board[8][8],Chess thischess)
 	}
 }
 
-Position simple_ai(Chess board[8][8], Chess thischess)
-{
-}
-
 Position game_ai(Chess board[8][8],Chess thischess)
 {
-	return naive_ai(board,thischess);
+	return greedy_ai(board,thischess);
 }
 
