@@ -1,4 +1,7 @@
 #include "common.h"
+
+#ifdef GREEDY_AI
+
 #include <iostream>
 #include <cstdlib>
 #define INF 0xffff
@@ -65,3 +68,4 @@ greedy_ai(Chess board[8][8], Chess thischess)
 	return (x<<4)|y;
 }
 
+#endif

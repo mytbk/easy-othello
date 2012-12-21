@@ -1,12 +1,20 @@
-CC=clang
-CXX=clang++
-CFLAGS=-g -Wall
-CXXFLAGS=${CFLAGS}
+#CC=clang
+#CXX=clang++
+#CFLAGS=-g -Wall
+#CXXFLAGS=${CFLAGS}
 
-OBJS=operations.o main.o functions.o game_ai.o greedy_ai.o
+MAINOBJS=operations.o main.o functions.o game_ai.o 
+AIOBJ= \
+	   simple_ai.o
+DEBUGOBJ=debug.o
+OBJS=${MAINOBJS} \
+	 ${AIOBJ} \
+	 ${DEBUGOBJ}
 
 prog : $(OBJS)
 	$(CXX) $(OBJS) -o prog
+
+functions.o simple_ai.o : debug.h
 
 #reverse.o : reverse.cpp
 #	$(CXX) -c $(CXXFLAGS) reverse.cpp -o reverse.o

@@ -3,21 +3,20 @@
 /* list of AI */
 Position naive_ai(Chess[][8],Chess);
 int greedy_ai(Chess[][8],Chess);
+int simple_ai(Chess[][8],Chess);
 /* end of AI list */
 
+#ifdef NAIVE_AI 
 Position naive_ai(Chess board[8][8],Chess thischess)
 	//just for test
 {
-	for (int i=0;i<8;i++){
-		for (int j=0;j<8;j++){
-			if (judgeload(i,j,board,thischess))
-				return (i<<4)|j;
-		}
-	}
+	Position first_move;
+	get_move(board,&first_move,thischess,1);
 }
+#endif
 
 Position game_ai(Chess board[8][8],Chess thischess)
 {
-	return greedy_ai(board,thischess);
+	return simple_ai(board,thischess);
 }
 

@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#define Debug
+#include "debug.h"
 
 void clrscr() 
 {

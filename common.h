@@ -12,10 +12,6 @@ typedef unsigned char Position;
 
 /*end of types and constants defination*/
 
-/*global game variables*/
-
-
-/*end of global game variables*/
 
 /*functions*/
 int get_move(Chess[][BSIZE],Position*,Chess,int);
@@ -23,5 +19,10 @@ bool judgeload(int,int,Chess[][BSIZE],Chess);//判断能否落子
 int reverse(Chess src[][BSIZE],Chess dest[][BSIZE],int x, int y,Chess thischess);
 Position game_ai(Chess board[8][8],Chess);
 extern "C" void clrscr();
+/* end of functions */
+
+/* choose AI */
+#define SIMPLE_AI
+
 #endif
 
