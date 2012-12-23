@@ -8,7 +8,7 @@ using namespace std;
 #ifdef SIMPLE_AI
 
 #define SQUARE(x) ((x)*(x))
-#define INF 0xffffff
+#define INF 0x10000
 const int sline[4][2]={{0,1},{0,-1},{1,0},{-1,0}};
 const int mline[4][2]={{-1,-1},{-1,1},{1,-1},{1,1}};
 const Chess corners[4][2]={{0,0},{0,BSIZE-1},{BSIZE-1,0},{BSIZE-1,BSIZE-1}};
@@ -20,17 +20,13 @@ evaluate(Chess board[8][8])
 	int value=0;
 	int values[8][8]={};
 
-	for (int i=0;i<8;i++)
+	for (int i=0;i<8;i++) //calculate chesses
 		for (int j=0;j<8;j++)
 			nChesses[1+board[i][j]]++;
-	if (nChesses[0]==0) //no whites
-		return INF;
-	if (nChesses[2]==0) //no blacks
-		return -INF;
-	/*
-	if (nChesses[1]<5) //the remaining chesses are few
-		return nChesses[2]-nChesses[0]; //remain fixed
-		*/
+
+	Position tmp;
+	if (!get_move(board,&tmp,1,1)&&!get_move(board,&tmp,-1,1)) //game over
+		return (nChesses[2]-nChesses[0])*INF; 
 
 	//calculate the corner value
 	int corner_value=SQUARE(nChesses[1]/5+1)+1;
@@ -112,6 +108,7 @@ search(Chess board[8][8], int thischess, int depth, int &x, int &y)
 #ifdef debug
 	cerr << thischess << '\t' << nMoves << " moves" << endl;
 #endif
+	bestx=list[0]>>4;besty=list[0]&0xf;
 	for (int i=0; i <nMoves ; i++){
 		tx = list[i]>>4;
 		ty = list[i]&0xf;
@@ -145,9 +142,9 @@ Position
 simple_ai(Chess board[8][8], Chess thischess)
 {
 	int x,y;
-	search(board,thischess,2,x,y);
+	search(board,thischess,4,x,y);
 	if (!judgeload(x,y,board,thischess)){
-		cerr << "Trying a wrong place!" << endl;
+		cerr << "Trying a wrong place (" << x <<',' << y << ")!" << endl;
 		system 
 #ifdef linux
 		("read");

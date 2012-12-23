@@ -4,7 +4,7 @@
 /* define types and constants */
 
 typedef int Chess;
-typedef unsigned char Position;
+typedef unsigned int Position;
 #define BLACK 1
 #define WHITE -1
 #define NUL 0

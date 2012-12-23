@@ -1,7 +1,7 @@
-#CC=clang
-#CXX=clang++
-#CFLAGS=-g -Wall
-#CXXFLAGS=${CFLAGS}
+CC=clang
+CXX=clang++
+CFLAGS=-g -O2 -Wall
+CXXFLAGS=${CFLAGS}
 
 MAINOBJS=operations.o main.o functions.o game_ai.o 
 AIOBJ= \
