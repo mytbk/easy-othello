@@ -3,6 +3,7 @@
 #include <cstring>
 #include <fstream>
 #include "common.h"
+#define VERSION "0.1Alpha 20121225"
 
 using namespace std;
 
@@ -14,27 +15,66 @@ void exitgame();//中途停止游戏的函数
 
 /* global variables */
 
+Chess qipan[8][8]={};
 Chess human=BLACK;
 Chess thischess; //当前落子的一方
-Chess qipan[8][8]={0};
-int nSteps; //记录步数
 int nChesses[3]; //双方棋子个数
 const char player[3]={'W',' ','B'};//加这一行的作用是为了显示轮到谁落子，否则容易忘记
+int nSteps; //记录总步数
+int cur_move; //当前步数
+struct
+{
+	Chess who;
+	int x,y;
+	int nBlack,nWhite;
+	Chess board[8][8];
+}record[61]; //记录每步的信息
 char hang,lie;
+int pLine,pColumn; //保存行列坐标
 bool normalexit=true;//标记是否是中途退出游戏
+
 /* end of global variables */
 
+void saveRecord() //保存棋局状态
+{
+	record[nSteps].who = thischess; //记录当前下子的一方
+	record[nSteps].x=pLine; //记录行数
+	record[nSteps].y=pColumn; //记录列数
+	record[nSteps].nBlack=nChesses[2];
+	record[nSteps].nWhite=nChesses[0];
+	memcpy(record[nSteps].board,qipan,sizeof(qipan)); //拷贝棋盘
+}
+
 void game_init() //棋局初始化
-{/*{{{*/
+{
 	memset(qipan,0,sizeof(qipan));
 	qipan[3][3]=WHITE;
 	qipan[3][4]=BLACK;
 	qipan[4][3]=BLACK;
 	qipan[4][4]=WHITE;
-	nSteps=0;
+	cur_move=nSteps=0;
 	nChesses[0]=nChesses[2]=2;
 	thischess=BLACK;
-}/*}}}*/
+	saveRecord();
+}
+
+void put_chess(Chess put, int x, int y)
+{
+	int nReversed=reverse(qipan,qipan,x,y,put); //翻转棋子并记录翻转棋子个数
+	nChesses[1+put]+=nReversed+1; //下子一方棋子增加(包括刚下的子)
+	nChesses[1-put]-=nReversed; //对方棋子减少
+	++cur_move; //当前步数加1
+	nSteps=cur_move; //最大步数等于当前步数
+	saveRecord(); //保存状态
+}
+
+void game_undo() //悔棋
+{
+}
+
+void game_redo() //撤销悔棋
+{
+}
 
 void printqizi() //打印棋盘
 {/*{{{*/
@@ -106,34 +146,53 @@ void choosecolour() //选择颜色
 	}
 }/*}}}*/
 
+/* 存档文件格式
+ * 第一行: 人所在的一方
+ * 以下各行为3个整数，依次为
+ * 下棋的一方 所下的行 所下的列
+ */
+
 void savechess()
-{/*{{{*/
-	ofstream of("data.txt",ios::out);
-		if(!of) return ;
-		of << human << endl;
-		for(int i=0;i<BSIZE;i++){
-			for(int j=0;j<BSIZE;j++)
-				of<<' '<<qipan[i][j];
-			of << endl;
-		}
-		of.close();
-}/*}}}*/
+{
+	char filename[1024];
+	cout << "请输入存盘文件（默认为data.txt）：" ;
+	cin.getline(filename,sizeof(filename)); //清空字符缓冲区
+	cin.getline(filename,sizeof(filename));
+	if (strlen(filename)==0)
+		strcpy(filename,"data.txt");
+
+	ofstream of(filename,ios::out);
+	if(!of) return ;
+	of << human << endl; //保存人类所在的一方
+	for(int i=1;i<=cur_move;i++){ //将开始至当前步数都存下来
+		of << record[i].who << ' ' 
+			<< record[i].x << ' ' << record[i].y << endl;
+	}
+	of.close();
+}
 
 void readchess()
-{/*{{{*/
-	ifstream infile("data.txt",ios::in);
-		if(!infile) return ;
-		nChesses[0]=nChesses[2]=0;
-		infile >> human;
-		for(int i=0;i<BSIZE;i++)
-			for(int j=0;j<BSIZE;j++){
-			 infile>>qipan[i][j];
-			 nChesses[qipan[i][j]+1]++;
-			}
-		infile.close();
-		thischess=human;
-		entergame();
-}/*}}}*/
+{
+	char filename[1024];
+	cout << "请输入存盘文件（默认为data.txt）：" ;
+	cin.getline(filename,sizeof(filename));
+	cin.getline(filename,sizeof(filename));
+	if (strlen(filename)==0)
+		strcpy(filename,"data.txt");
+
+	ifstream infile(filename,ios::in);
+	if(!infile) return ;
+
+	//开始加载棋局
+	game_init();
+	infile >> human;
+	while (infile>>thischess>>pLine>>pColumn){
+		put_chess(thischess,pLine,pColumn);
+	}
+	infile.close();
+	thischess=human;
+	entergame();
+}
 
 void exitgame()
 {/*{{{*/
@@ -145,9 +204,10 @@ void exitgame()
 }/*}}}*/
 
 void printmainmenu() //主界面
-{/*{{{*/
+{
 	for (;;){
 		clrscr();
+		cout<<"黑白棋 "<<VERSION<<endl<<endl; 
 		cout<<"主菜单："<<endl;
 		cout<<"1.直接进入游戏"<<endl;
 		cout<<"2.继续游戏"<<endl;
@@ -157,7 +217,7 @@ void printmainmenu() //主界面
 		cout<<"6.退出游戏"<<endl;
 		judge();
 	}
-}/*}}}*/
+}
 
 void judgewin()
 {/*{{{*/
@@ -169,7 +229,7 @@ void judgewin()
 }/*}}}*/
 
 void entergame() //游戏
-{/*{{{*/
+{
 	if(normalexit)
 		printqizi();
 	int moveflag=0; //记录不可移动的步数，2则游戏结束
@@ -185,25 +245,24 @@ void entergame() //游戏
 		}
 		bool canMove=false;
 		Position test; //一个可下子的点
-		if (get_move(qipan,&test,thischess,1))
+		if (get_move(qipan,&test,thischess,1)) //如果可下子
 			canMove=true;
 
 		if (canMove){
 			moveflag=0;
-			int nReversed;
 			if (thischess!=human){
 				Position pos = game_ai(qipan,thischess);
-				nReversed = reverse(qipan,qipan,pos>>4,pos&0xf,thischess);
+				pLine = pos>>4;
+				pColumn = pos&0xf;
 			}else{
 				shuruzuobiao();
 				if (hang=='R' && lie=='M') //遇到返回菜单的命令
 					return;
-				nReversed=reverse(qipan,qipan,hang-'A',lie-'1',thischess);
+				pLine = hang-'A';
+				pColumn = lie-'1';
 			}
+			put_chess(thischess,pLine,pColumn);
 			clrscr();
-			nChesses[1+thischess]+=nReversed+1;
-			nChesses[1-thischess]-=nReversed;
-			++nSteps;
 		}
 		else{
 			++moveflag; //the player has no place to move
@@ -213,7 +272,7 @@ void entergame() //游戏
 		thischess=-thischess;
 		printqizi();
 	}
-}/*}}}*/
+}
 
 void judge() //处理主菜单的命令
 {/*{{{*/
