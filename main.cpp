@@ -36,17 +36,17 @@ bool normalexit=true;//标记是否是中途退出游戏
 /* end of global variables */
 
 void saveRecord() //保存棋局状态
-{/*{{{*/
+{
 	record[nSteps].who = thischess; //记录当前下子的一方
 	record[nSteps].x=pLine; //记录行数
 	record[nSteps].y=pColumn; //记录列数
 	record[nSteps].nBlack=nChesses[2];
 	record[nSteps].nWhite=nChesses[0];
 	memcpy(record[nSteps].board,qipan,sizeof(qipan)); //拷贝棋盘
-}/*}}}*/
+}
 
 void game_init() //棋局初始化
-{/*{{{*/
+{
 	memset(qipan,0,sizeof(qipan));
 	qipan[3][3]=WHITE;
 	qipan[3][4]=BLACK;
@@ -56,7 +56,7 @@ void game_init() //棋局初始化
 	nChesses[0]=nChesses[2]=2;
 	thischess=BLACK;
 	saveRecord();
-}/*}}}*/
+}
 
 void put_chess(Chess put, int x, int y)
 {
@@ -106,7 +106,7 @@ void game_redo() //撤销悔棋
 }
 
 void printqizi() //打印棋盘
-{/*{{{*/
+{
 	cout<<"黑棋 ●  "<<nChesses[2]<<endl;
 	cout<<"白棋 ○  "<<nChesses[0]<<endl;
 	cout<<"    1   2   3   4   5   6   7   8  "<<endl;
@@ -134,7 +134,7 @@ void printqizi() //打印棋盘
 		else
 			cout<<"  ╚ ═ ╩ ═ ╩ ═ ╩ ═ ╩ ═ ╩ ═ ╩ ═ ╩ ═ ╝"<<endl;
 	}
-}/*}}}*/
+}
 
 void shuruzuobiao() //在游戏界面处理输入
 {
@@ -167,7 +167,7 @@ void shuruzuobiao() //在游戏界面处理输入
 }
 
 void choosecolour() //选择颜色
-{/*{{{*/
+{
 	int colour;
 	cout<<"请输入您需要选择的棋子颜色：(黑 1 or 白 -1)"<<endl;
 	cin>>colour;
@@ -180,7 +180,7 @@ void choosecolour() //选择颜色
 		cout<<"您选择的颜色有误，请重新输入：";
 		choosecolour();
 	}
-}/*}}}*/
+}
 
 /* 存档文件格式
  * 第一行: 人所在的一方
@@ -208,7 +208,7 @@ void savechess()
 }
 
 void readchess()
-{/*{{{*/
+{
 	char filename[1024];
 	cout << "请输入存盘文件（默认为data.txt）：" ;
 	cin.getline(filename,sizeof(filename));
@@ -228,16 +228,16 @@ void readchess()
 	infile.close();
 	thischess=human;
 	entergame();
-}/*}}}*/
+}
 
 void exitgame()
-{/*{{{*/
+{
 	char input;
 	cout<<"您的确要离开游戏么？（Y or N）"<<endl;
 	cin>>input;
 	if(input=='Y'||input=='y')
 		exit(0);
-}/*}}}*/
+}
 
 void printmainmenu() //主界面
 {
@@ -256,13 +256,13 @@ void printmainmenu() //主界面
 }
 
 void judgewin()
-{/*{{{*/
+{
 	if(nChesses[2]>nChesses[0])
 		cout<<"黑棋胜！"<<endl;
 	else if(nChesses[2]<nChesses[0])
 		cout<<"白棋胜！"<<endl;
 	else cout<<"平手！"<<endl;
-}/*}}}*/
+}
 
 void entergame() //游戏
 {
@@ -310,7 +310,7 @@ void entergame() //游戏
 }
 
 void judge() //处理主菜单的命令
-{/*{{{*/
+{
     int  input1;
 	cout<<"请输入指令:";
 	cin>>input1;
@@ -332,7 +332,7 @@ void judge() //处理主菜单的命令
 	else {cout<<"您输入的指令有误，请重新输入：";
 		judge();
 	}
-}/*}}}*/
+}
 
 int main ()
 {
