@@ -31,7 +31,6 @@ struct
 }record[61]; //记录每步的信息
 char hang,lie;
 int pLine,pColumn; //保存行列坐标
-bool normalexit=true;//标记是否是中途退出游戏
 
 /* end of global variables */
 
@@ -224,7 +223,7 @@ void readchess()
 	infile >> human;
 	while (infile>>thischess>>pLine>>pColumn)
 		put_chess(thischess,pLine,pColumn);
-	
+
 	infile.close();
 	thischess=human;
 	entergame();
@@ -266,12 +265,12 @@ void judgewin()
 
 void entergame() //游戏
 {
+	clrscr();
+	printqizi();
 	int moveflag=0; //记录不可移动的步数，2则游戏结束
 	while(1){
-		clrscr();
-		printqizi();
 		if (moveflag==2||nSteps==60){
-			if (normalexit) judgewin();
+			judgewin();
 			cout << "游戏结束,按Enter返回主菜单。" << endl;
 			char buf[8];
 			cin.getline(buf,8);
@@ -293,12 +292,17 @@ void entergame() //游戏
 				shuruzuobiao();
 				if (hang=='R' && lie=='M') //遇到返回菜单的命令
 					return;
-				if (lie=='D') //遇到undo/redo
+				if (lie=='D'){ //遇到undo/redo
+					clrscr();
+					printqizi();
 					continue;
+				}
 				pLine = hang-'A';
 				pColumn = lie-'1';
 			}
 			put_chess(thischess,pLine,pColumn);
+			clrscr();
+			printqizi();
 		}
 		else{
 			++moveflag; //the player has no place to move
@@ -311,11 +315,11 @@ void entergame() //游戏
 
 void judge() //处理主菜单的命令
 {
-    int  input1;
+	int  input1;
 	cout<<"请输入指令:";
 	cin>>input1;
 	if(input1==1)
-    {
+	{
 		game_init();
 		entergame();
 	}
