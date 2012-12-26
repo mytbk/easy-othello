@@ -59,14 +59,21 @@ void game_init() //棋局初始化
 }/*}}}*/
 
 void put_chess(Chess put, int x, int y)
-{/*{{{*/
+{
 	int nReversed=reverse(qipan,qipan,x,y,put); //翻转棋子并记录翻转棋子个数
 	nChesses[1+put]+=nReversed+1; //下子一方棋子增加(包括刚下的子)
 	nChesses[1-put]-=nReversed; //对方棋子减少
 	++cur_move; //当前步数加1
 	nSteps=cur_move; //最大步数等于当前步数
 	saveRecord(); //保存状态
-}/*}}}*/
+}
+
+void load_status()
+{
+	memcpy(qipan,record[cur_move].board,sizeof(qipan));
+	nChesses[0]=record[cur_move].nWhite;
+	nChesses[2]=record[cur_move].nBlack;
+}
 
 void game_undo() //悔棋
 {
@@ -78,7 +85,8 @@ void game_undo() //悔棋
 		return;
 	}
 	cur_move = p-1;
-	thischess = human;
+	load_status();
+	thischess = human; //下一步是人下
 	return;
 }
 
@@ -92,7 +100,8 @@ void game_redo() //撤销悔棋
 		return;
 	}
 	cur_move = p;
-	thischess = -human;
+	load_status();
+	thischess = -human; //下一步是计算机下
 	return;
 }
 
@@ -146,8 +155,10 @@ void shuruzuobiao() //在游戏界面处理输入
 			return;
 		}else if (hang=='U'&&lie=='D'){
 			game_undo();
+			return;
 		}else if (hang=='R'&&lie=='D'){
 			game_redo();
+			return;
 		}
 		else{
 			cout<<"输入坐标无效，请重新输入："<<endl;
@@ -197,7 +208,7 @@ void savechess()
 }
 
 void readchess()
-{
+{/*{{{*/
 	char filename[1024];
 	cout << "请输入存盘文件（默认为data.txt）：" ;
 	cin.getline(filename,sizeof(filename));
@@ -217,7 +228,7 @@ void readchess()
 	infile.close();
 	thischess=human;
 	entergame();
-}
+}/*}}}*/
 
 void exitgame()
 {/*{{{*/
@@ -255,11 +266,11 @@ void judgewin()
 
 void entergame() //游戏
 {
-	if(normalexit)
-		printqizi();
 	int moveflag=0; //记录不可移动的步数，2则游戏结束
 	while(1)
 	{
+		clrscr();
+		printqizi();
 		if (moveflag==2||nSteps==60){
 			if (normalexit) judgewin();
 			cout << "游戏结束,按Enter返回主菜单。" << endl;
@@ -270,7 +281,7 @@ void entergame() //游戏
 		}
 		bool canMove=false;
 		Position test; //一个可下子的点
-		if (get_move(qipan,&test,thischess,1)) //如果可下子
+		if (get_move(qipan,&test,thischess,1)) //可下子
 			canMove=true;
 
 		if (canMove){
@@ -283,20 +294,19 @@ void entergame() //游戏
 				shuruzuobiao();
 				if (hang=='R' && lie=='M') //遇到返回菜单的命令
 					return;
-				//if (
+				if (lie=='D') //遇到undo/redo
+					continue;
 				pLine = hang-'A';
 				pColumn = lie-'1';
 			}
 			put_chess(thischess,pLine,pColumn);
-			clrscr();
 		}
 		else{
 			++moveflag; //the player has no place to move
 			cout << "Player" << player[1+thischess] 
 				<< " has no valid moves." << endl;
 		}
-		thischess=-thischess;
-		printqizi();
+		thischess=-thischess; //切换下子的一方
 	}
 }
 
