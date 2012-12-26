@@ -36,17 +36,17 @@ bool normalexit=true;//标记是否是中途退出游戏
 /* end of global variables */
 
 void saveRecord() //保存棋局状态
-{
+{/*{{{*/
 	record[nSteps].who = thischess; //记录当前下子的一方
 	record[nSteps].x=pLine; //记录行数
 	record[nSteps].y=pColumn; //记录列数
 	record[nSteps].nBlack=nChesses[2];
 	record[nSteps].nWhite=nChesses[0];
 	memcpy(record[nSteps].board,qipan,sizeof(qipan)); //拷贝棋盘
-}
+}/*}}}*/
 
 void game_init() //棋局初始化
-{
+{/*{{{*/
 	memset(qipan,0,sizeof(qipan));
 	qipan[3][3]=WHITE;
 	qipan[3][4]=BLACK;
@@ -56,24 +56,44 @@ void game_init() //棋局初始化
 	nChesses[0]=nChesses[2]=2;
 	thischess=BLACK;
 	saveRecord();
-}
+}/*}}}*/
 
 void put_chess(Chess put, int x, int y)
-{
+{/*{{{*/
 	int nReversed=reverse(qipan,qipan,x,y,put); //翻转棋子并记录翻转棋子个数
 	nChesses[1+put]+=nReversed+1; //下子一方棋子增加(包括刚下的子)
 	nChesses[1-put]-=nReversed; //对方棋子减少
 	++cur_move; //当前步数加1
 	nSteps=cur_move; //最大步数等于当前步数
 	saveRecord(); //保存状态
-}
+}/*}}}*/
 
 void game_undo() //悔棋
 {
+	int p;
+	for (p=cur_move;p&&record[p].who!=human;p--)
+		;
+	if (p==0){
+		cerr << "已经是第一步！" << endl;
+		return;
+	}
+	cur_move = p-1;
+	thischess = human;
+	return;
 }
 
 void game_redo() //撤销悔棋
 {
+	int p;
+	for (p=cur_move+1;p<=nSteps&&record[p].who!=human;p++)
+		;
+	if (p>nSteps){
+		cerr << "已经是最后一步！" << endl;
+		return;
+	}
+	cur_move = p;
+	thischess = -human;
+	return;
 }
 
 void printqizi() //打印棋盘
@@ -108,10 +128,11 @@ void printqizi() //打印棋盘
 }/*}}}*/
 
 void shuruzuobiao() //在游戏界面处理输入
-{/*{{{*/
+{
 	while (1){
 		cout<<"请输入您需要落子的位置坐标：（例如 A 1），player"<<player[thischess+1]<<" "<<endl;;
 		cout<<"返回主菜单请输入：R M"<<endl;//(return mainmenu)
+		cout<<"悔棋请按UD,撤销悔棋请按RD"<<endl;
 		cin>>hang>>lie;
 		if(((hang>='A'&&hang<='H')||(hang>='a'&&hang<='h'))&&lie>='1'&&lie<='8')
 		{
@@ -123,12 +144,16 @@ void shuruzuobiao() //在游戏界面处理输入
 			}
 		}else if(hang=='R'&&lie=='M'){
 			return;
+		}else if (hang=='U'&&lie=='D'){
+			game_undo();
+		}else if (hang=='R'&&lie=='D'){
+			game_redo();
 		}
 		else{
 			cout<<"输入坐标无效，请重新输入："<<endl;
 		}
 	}
-}/*}}}*/
+}
 
 void choosecolour() //选择颜色
 {/*{{{*/
@@ -186,9 +211,9 @@ void readchess()
 	//开始加载棋局
 	game_init();
 	infile >> human;
-	while (infile>>thischess>>pLine>>pColumn){
+	while (infile>>thischess>>pLine>>pColumn)
 		put_chess(thischess,pLine,pColumn);
-	}
+	
 	infile.close();
 	thischess=human;
 	entergame();
@@ -258,6 +283,7 @@ void entergame() //游戏
 				shuruzuobiao();
 				if (hang=='R' && lie=='M') //遇到返回菜单的命令
 					return;
+				//if (
 				pLine = hang-'A';
 				pColumn = lie-'1';
 			}
