@@ -3,7 +3,7 @@
 #include <cstring>
 #include <fstream>
 #include "common.h"
-#define VERSION "0.1Alpha 20121225"
+#define VERSION "0.1Alpha 20121226"
 
 using namespace std;
 
@@ -68,10 +68,10 @@ void put_chess(Chess put, int x, int y)
 	saveRecord(); //保存状态
 }
 
-void load_status()
+void load_status() //加载cur_move步的状态
 {
-	memcpy(qipan,record[cur_move].board,sizeof(qipan));
-	nChesses[0]=record[cur_move].nWhite;
+	memcpy(qipan,record[cur_move].board,sizeof(qipan)); //复制棋盘
+	nChesses[0]=record[cur_move].nWhite; //复制棋子个数
 	nChesses[2]=record[cur_move].nBlack;
 }
 
@@ -79,12 +79,12 @@ void game_undo() //悔棋
 {
 	int p;
 	for (p=cur_move;p&&record[p].who!=human;p--)
-		;
-	if (p==0){
+		; //找到该步及此前人下的最后一步
+	if (p==0){ //无法悔棋
 		cerr << "已经是第一步！" << endl;
 		return;
 	}
-	cur_move = p-1;
+	cur_move = p-1; //应当悔至p-1步
 	load_status();
 	thischess = human; //下一步是人下
 	return;
@@ -94,8 +94,8 @@ void game_redo() //撤销悔棋
 {
 	int p;
 	for (p=cur_move+1;p<=nSteps&&record[p].who!=human;p++)
-		;
-	if (p>nSteps){
+		;//找到该步后人下的第一步
+	if (p>nSteps){ //超出最大步数
 		cerr << "已经是最后一步！" << endl;
 		return;
 	}
@@ -141,11 +141,11 @@ void shuruzuobiao() //在游戏界面处理输入
 	while (1){
 		cout<<"请输入您需要落子的位置坐标：（例如 A 1），player"<<player[thischess+1]<<" "<<endl;;
 		cout<<"返回主菜单请输入：R M"<<endl;//(return mainmenu)
-		cout<<"悔棋请按UD,撤销悔棋请按RD"<<endl;
+		cout<<"悔棋请输入UD,撤销悔棋请输入RD"<<endl;
 		cin>>hang>>lie;
 		if(((hang>='A'&&hang<='H')||(hang>='a'&&hang<='h'))&&lie>='1'&&lie<='8')
 		{
-			hang&=0xdf;
+			hang&=0xdf; //强制转为大写字母
 			if (judgeload(hang-'A',lie-'1',qipan,thischess))
 				return;
 			else {
@@ -153,10 +153,10 @@ void shuruzuobiao() //在游戏界面处理输入
 			}
 		}else if(hang=='R'&&lie=='M'){
 			return;
-		}else if (hang=='U'&&lie=='D'){
+		}else if (hang=='U'&&lie=='D'){ //悔棋
 			game_undo();
 			return;
-		}else if (hang=='R'&&lie=='D'){
+		}else if (hang=='R'&&lie=='D'){ //撤销悔棋
 			game_redo();
 			return;
 		}
@@ -267,8 +267,7 @@ void judgewin()
 void entergame() //游戏
 {
 	int moveflag=0; //记录不可移动的步数，2则游戏结束
-	while(1)
-	{
+	while(1){
 		clrscr();
 		printqizi();
 		if (moveflag==2||nSteps==60){
