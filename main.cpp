@@ -3,7 +3,7 @@
 #include <cstring>
 #include <fstream>
 #include "common.h"
-#define VERSION "0.1Alpha 20121226"
+#define VERSION "0.1Alpha 20121228"
 
 using namespace std;
 

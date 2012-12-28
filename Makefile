@@ -1,5 +1,3 @@
-#CC=clang
-#CXX=clang++
 CFLAGS=-g -O0 -Wall
 CXXFLAGS=${CFLAGS}
 
