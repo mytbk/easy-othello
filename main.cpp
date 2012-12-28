@@ -31,7 +31,7 @@ struct
 }record[61]; //记录每步的信息
 char hang,lie;
 int pLine,pColumn; //保存行列坐标
-int level=2; //难度系数
+int level=4; //难度系数
 
 /* end of global variables */
 
@@ -245,7 +245,7 @@ void printmainmenu() //主界面
 		clrscr();
 		cout<<"黑白棋 "<<VERSION<<endl<<endl; 
 		cout<<"主菜单："<<endl;
-		cout<<"1.直接进入游戏"<<endl;
+		cout<<"1.新游戏"<<endl;
 		cout<<"2.继续游戏"<<endl;
 		cout<<"3.选择棋子颜色"<<endl;
 		cout<<"4.当前游戏存盘"<<endl;
