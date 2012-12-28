@@ -31,6 +31,7 @@ struct
 }record[61]; //记录每步的信息
 char hang,lie;
 int pLine,pColumn; //保存行列坐标
+int level=2; //难度系数
 
 /* end of global variables */
 
@@ -285,7 +286,7 @@ void entergame() //游戏
 		if (canMove){
 			moveflag=0;
 			if (thischess!=human){
-				Position pos = game_ai(qipan,thischess);
+				Position pos = game_ai(qipan,thischess,level);
 				pLine = pos>>4;
 				pColumn = pos&0xf;
 			}else{

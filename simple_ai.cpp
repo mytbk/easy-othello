@@ -139,10 +139,10 @@ search(Chess board[8][8], int thischess, int depth, int &x, int &y)
 
 
 Position 
-simple_ai(Chess board[8][8], Chess thischess)
+simple_ai(Chess board[8][8], Chess thischess, int level)
 {
 	int x,y;
-	search(board,thischess,4,x,y);
+	search(board,thischess,level,x,y);
 	//以下代码用于测试时使用
 	if (!judgeload(x,y,board,thischess)){
 		cerr << "Trying a wrong place (" << x <<',' << y << ")!" << endl;
