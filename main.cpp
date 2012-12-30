@@ -31,7 +31,7 @@ struct
 }record[61]; //记录每步的信息
 char hang,lie;
 int pLine,pColumn; //保存行列坐标
-int level=4; //难度系数
+int level=6; //难度系数
 
 /* end of global variables */
 
@@ -117,7 +117,10 @@ void printqizi() //打印棋盘
 			switch(qipan[i][j])
 			{
 				case NUL:
-					cout<<"   ";
+					if (thischess==human&&judgeload(i,j,qipan,thischess))
+						cout << " + ";
+					else
+						cout<<"   ";
 					break;
 				case BLACK:
 					cout<<" ● ";
@@ -303,7 +306,6 @@ void entergame() //游戏
 			}
 			put_chess(thischess,pLine,pColumn);
 			clrscr();
-			printqizi();
 		}
 		else{
 			++moveflag; //the player has no place to move
@@ -311,6 +313,7 @@ void entergame() //游戏
 				<< " has no valid moves." << endl;
 		}
 		thischess=-thischess; //切换下子的一方
+			printqizi();
 	}
 }
 
