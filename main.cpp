@@ -4,7 +4,7 @@
 #include <cstring>
 #include <fstream>
 #include "common.h"
-#define VERSION "0.1Alpha 20121228"
+#define VERSION "0.1Alpha 20130104"
 
 using namespace std;
 
@@ -150,6 +150,7 @@ void shuruzuobiao() //在游戏界面处理输入
 		if (!cin.getline(buf,sizeof(buf)))
 			exit(0);
 		stringstream ifs(buf);
+		hang=lie=0;
 		ifs>>hang>>lie;
 		if(((hang>='A'&&hang<='H')||(hang>='a'&&hang<='h'))&&lie>='1'&&lie<='8')
 		{
@@ -315,9 +316,10 @@ void entergame() //游戏
 			++moveflag; //the player has no place to move
 			cout << "Player" << player[1+thischess] 
 				<< " has no valid moves." << endl;
+			sleep(1);
 		}
 		thischess=-thischess; //切换下子的一方
-			printqizi();
+		printqizi();
 	}
 }
 

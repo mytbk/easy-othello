@@ -19,6 +19,12 @@ bool judgeload(int,int,Chess[][BSIZE],Chess);//判断能否落子
 int reverse(Chess src[][BSIZE],Chess dest[][BSIZE],int x, int y,Chess thischess);
 Position game_ai(Chess board[8][8],Chess,int);
 extern "C" void clrscr();
+#ifdef __WIN32
+#include <windows.h>
+#define sleep(x) Sleep(x*1000)
+#else
+#include <unistd.h>
+#endif
 /* end of functions */
 
 /* choose AI */
