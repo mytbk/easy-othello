@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
@@ -32,6 +33,7 @@ struct
 char hang,lie;
 int pLine,pColumn; //保存行列坐标
 int level=6; //难度系数
+char buf[1024]; //buffer
 
 /* end of global variables */
 
@@ -145,7 +147,10 @@ void shuruzuobiao() //在游戏界面处理输入
 		cout<<"请输入您需要落子的位置坐标：（例如 A 1），player"<<player[thischess+1]<<" "<<endl;;
 		cout<<"返回主菜单请输入：R M"<<endl;//(return mainmenu)
 		cout<<"悔棋请输入UD,撤销悔棋请输入RD"<<endl;
-		cin>>hang>>lie;
+		if (!cin.getline(buf,sizeof(buf)))
+			exit(0);
+		stringstream ifs(buf);
+		ifs>>hang>>lie;
 		if(((hang>='A'&&hang<='H')||(hang>='a'&&hang<='h'))&&lie>='1'&&lie<='8')
 		{
 			hang&=0xdf; //强制转为大写字母
@@ -173,7 +178,9 @@ void choosecolour() //选择颜色
 {
 	int colour;
 	cout<<"请输入您需要选择的棋子颜色：(黑 1 or 白 -1)"<<endl;
-	cin>>colour;
+	if (!cin.getline(buf,sizeof(buf)))
+		exit(0);
+	colour = atoi(buf);
 	if(colour==1||colour==-1) { 
 		human=colour;
 		game_init();
@@ -195,7 +202,6 @@ void savechess()
 {
 	char filename[1024];
 	cout << "请输入存盘文件（默认为data.txt）：" ;
-	cin.getline(filename,sizeof(filename)); //清空字符缓冲区
 	cin.getline(filename,sizeof(filename));
 	if (strlen(filename)==0)
 		strcpy(filename,"data.txt");
@@ -214,7 +220,6 @@ void readchess()
 {
 	char filename[1024];
 	cout << "请输入存盘文件（默认为data.txt）：" ;
-	cin.getline(filename,sizeof(filename));
 	cin.getline(filename,sizeof(filename));
 	if (strlen(filename)==0)
 		strcpy(filename,"data.txt");
@@ -237,7 +242,8 @@ void exitgame()
 {
 	char input;
 	cout<<"您的确要离开游戏么？（Y or N）"<<endl;
-	cin>>input;
+	cin.getline(buf,sizeof(buf));
+	input=buf[0];
 	if(input=='Y'||input=='y')
 		exit(0);
 }
@@ -276,9 +282,7 @@ void entergame() //游戏
 		if (moveflag==2||nSteps==60){
 			judgewin();
 			cout << "游戏结束,按Enter返回主菜单。" << endl;
-			char buf[8];
-			cin.getline(buf,8);
-			cin.getline(buf,8);
+			cin.getline(buf,sizeof(buf));
 			return;
 		}
 		bool canMove=false;
@@ -319,26 +323,33 @@ void entergame() //游戏
 
 void judge() //处理主菜单的命令
 {
+	char tmp[0x100];
 	int  input1;
-	cout<<"请输入指令:";
-	cin>>input1;
-	if(input1==1)
-	{
-		game_init();
-		entergame();
-	}
-	else if(input1==2)
-		entergame();
-	else if(input1==3)
-		choosecolour();
-	else if(input1==4)
-		savechess();
-	else if(input1==5)
-		readchess();
-	else if(input1==6)
-		exitgame();
-	else {cout<<"您输入的指令有误，请重新输入：";
-		judge();
+	for (;;){
+		cout<<"请输入指令:";
+		if (!cin.getline(tmp,sizeof(tmp)))
+			exit(0);
+		input1 = atoi(tmp);
+		if(input1==1)
+		{
+			game_init();
+			entergame();
+		}
+		else if(input1==2)
+			entergame();
+		else if(input1==3)
+			choosecolour();
+		else if(input1==4)
+			savechess();
+		else if(input1==5)
+			readchess();
+		else if(input1==6)
+			exitgame();
+		else {
+			cout<<"您输入的指令有误，请重新输入：" << endl;
+			continue;
+		}
+		return;
 	}
 }
 
