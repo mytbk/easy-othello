@@ -4,7 +4,7 @@
 #include <cstring>
 #include <fstream>
 #include "common.h"
-#define VERSION "0.1Alpha 20130104"
+#define VERSION "0.1Beta 20130105"
 
 using namespace std;
 
@@ -20,7 +20,7 @@ Chess qipan[8][8]={};
 Chess human=BLACK;
 Chess thischess; //当前落子的一方
 int nChesses[3]; //双方棋子个数
-const char player[3]={'W',' ','B'};//加这一行的作用是为了显示轮到谁落子，否则容易忘记
+const char *player[3]={"White","","Black"};//加这一行的作用是为了显示轮到谁落子，否则容易忘记
 int nSteps; //记录总步数
 int cur_move; //当前步数
 struct
@@ -144,7 +144,7 @@ void printqizi() //打印棋盘
 void shuruzuobiao() //在游戏界面处理输入
 {
 	while (1){
-		cout<<"请输入您需要落子的位置坐标：（例如 A 1），player"<<player[thischess+1]<<" "<<endl;;
+		cout<<"请输入您需要落子的位置坐标：（例如 A 1），player "<<player[thischess+1]<<" "<<endl;;
 		cout<<"返回主菜单请输入：R M"<<endl;//(return mainmenu)
 		cout<<"悔棋请输入UD,撤销悔棋请输入RD"<<endl;
 		if (!cin.getline(buf,sizeof(buf)))
@@ -314,7 +314,7 @@ void entergame() //游戏
 		}
 		else{
 			++moveflag; //the player has no place to move
-			cout << "Player" << player[1+thischess] 
+			cout << "Player " << player[1+thischess] 
 				<< " has no valid moves." << endl;
 			sleep(1);
 		}

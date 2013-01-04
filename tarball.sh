@@ -1,7 +1,7 @@
 #!/bin/sh
 
 mkdir othello-gbk
-for FILE in *.c *.cpp *.h Makefile
+for FILE in $(cat filelist)
 do
 	iconv $FILE -f UTF-8 -t GBK > ./othello-gbk/$FILE
 done

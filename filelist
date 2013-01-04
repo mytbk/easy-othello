@@ -5,5 +5,5 @@ functions.c
 debug.c
 debug.h
 game_ai.cpp
-simple_ai.cpp
+btr_ai.cpp
 Makefile
