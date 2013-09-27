@@ -2,8 +2,7 @@ CFLAGS=-g -O2 -Wall
 CXXFLAGS=${CFLAGS}
 
 MAINOBJS=operations.o main.o functions.o game_ai.o 
-AIOBJ= \
-	   btr_ai.o
+AIOBJ= btr_ai.o
 DEBUGOBJ=debug.o
 OBJS=${MAINOBJS} \
 	 ${AIOBJ} \
